@@ -2,7 +2,6 @@
 #include <chrono>
 #include <string>
 
-
 class AircraftBase {
 
 protected:
@@ -70,6 +69,7 @@ protected:
   virtual void onReceive() = 0;
   virtual Commands checkCommand(std::string recv) = 0;
 
+  // recording
   void beginRecord() { recording = true; }
 
   void endRecord() { recording = false; }
