@@ -8,11 +8,7 @@ This program is developed under the mbed-os 6.2.0
 constexpr float launchThreshold = 2.5;    // G
 constexpr float landingTime = 140; // s
 
-//launcher
-constexpr float launcherDirection = 270.0f;
-constexpr float launcherElevation = 90.0f;
-
-Aircraft aircraft(launchThreshold, landingTime, launcherDirection, launcherElevation);
+Aircraft aircraft(launchThreshold, landingTime);
 
 int main()
 {
