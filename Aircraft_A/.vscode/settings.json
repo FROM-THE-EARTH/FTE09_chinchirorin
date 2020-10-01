@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "mstd_mutex": "cpp",
+        "chrono": "cpp"
+    }
+}

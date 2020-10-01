@@ -1,8 +1,8 @@
 #include "Aircraft.h"
 
 //condition
-constexpr float launchThreshold = 2.5;    // G
-constexpr float landingTime = 140; // s
+constexpr float launchThreshold = 2.5; // G
+constexpr float landingTime = 140;     // s
 
 Aircraft aircraft(launchThreshold, landingTime);
 
