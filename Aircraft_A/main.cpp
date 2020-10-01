@@ -1,7 +1,3 @@
-/*
-This program is developed under the mbed-os 6.2.0
-*/
-
 #include "Aircraft.h"
 
 //condition
