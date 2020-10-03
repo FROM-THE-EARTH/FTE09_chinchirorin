@@ -1,6 +1,6 @@
-#include "Aircraft.h"
+#include "Avionics.h"
 
-Aircraft aircraft;
+Avionics avionics;
 
 static void defineFunctions();
 
@@ -10,28 +10,28 @@ int main()
 
   defineFunctions();
 
-  aircraft.setDebugMode(true);
+  avionics.setDebugMode(true);
 
-  aircraft.initialize();
+  avionics.initialize();
 
-  aircraft.begin();
+  avionics.begin();
 }
 
 static void defineFunctions()
 {
-  aircraft.Condition_Launch = []() {
-    return aircraft.data().accel.length() > 2.5;
+  avionics.Condition_Launch = []() {
+    return avionics.data().accel.length() > 2.5;
   };
 
-  aircraft.Condition_Detach = Function::Condition::None;
+  avionics.Condition_Detach = Function::Condition::None;
 
-  aircraft.Condition_Deceleration = Function::Condition::None;
+  avionics.Condition_Deceleration = Function::Condition::None;
 
-  aircraft.Condition_Landing = []() {
-    return (aircraft.data().time - aircraft.data().bootTime) > 140.0f;
+  avionics.Condition_Landing = []() {
+    return (avionics.data().time - avionics.data().bootTime) > 140.0f;
   };
 
-  aircraft.Operation_Detach = Function::Operation::None;
+  avionics.Operation_Detach = Function::Operation::None;
 
-  aircraft.Operation_OpenParachute = Function::Operation::None;
+  avionics.Operation_OpenParachute = Function::Operation::None;
 }

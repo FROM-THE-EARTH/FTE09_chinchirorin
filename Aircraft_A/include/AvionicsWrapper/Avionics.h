@@ -1,9 +1,9 @@
 #include "../PlatformDefinition.h"
 
 #ifdef PLATFORM_MBED
-#include "AircraftMbed/AircraftMbed.h"
+#include "AvionicsMbed/AvionicsMbed.h"
 #endif
 
 #ifdef PLATFORM_ARDUINO
-#include "AircraftArduino/AircraftArduino.h"
+#include "AvionicsArduino/AvionicsArduino.h"
 #endif
