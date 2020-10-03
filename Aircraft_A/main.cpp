@@ -1,6 +1,8 @@
 #include "Avionics/Avionics.h"
 
-Avionics avionics(false);
+Avionics avionics;
+
+DigitalIn flightpin(p12);
 
 static void defineFunctions();
 
@@ -20,7 +22,7 @@ int main()
 static void defineFunctions()
 {
   avionics.Condition_Launch = []() {
-    return avionics.data().accel.length() > 2.5;
+    return !flightpin && (avionics.data().accel.length() > 2.5);
   };
 
   avionics.Condition_Detach = Function::Condition::None;
