@@ -1,4 +1,5 @@
 #include "../Avionics.h"
+#include <cstdio>
 
 #ifdef PLATFORM_MBED
 
@@ -7,6 +8,12 @@
 
 bool Avionics::initialize()
 {
+  sd_.opening_file("/fs/", "test.txt");
+  FILE *f = sd_.getFile();
+  fprintf(f, "aaaaaaaaaaa");
+  sd_.closing_file();
+  sd_.unmounting();
+
   // IM920
   transmitter_.initialize();
   transmitter_.transmit("Initializing");
@@ -31,6 +38,18 @@ bool Avionics::initialize()
   lps_.setResolution(LPS331_I2C_PRESSURE_AVG_384, LPS331_I2C_TEMP_AVG_64);
   lps_.setDataRate(LPS331_I2C_DATARATE_25HZ);
 
+  // ADXL345
+  /*if (adxl_.setPowerControl(0x00))
+  {
+    pc.printf("didn't intitialize power control\r\n");
+    return 0;
+  }
+  if (adxl_.setDataRate(ADXL345_800HZ))
+  {
+    pc.printf("didn't set data rate\r\n");
+    return 0;
+  }*/
+
   // SD
   /*fp = fopen("/sd/data.csv", "w");
   if(fp != NULL) {
@@ -38,7 +57,7 @@ bool Avionics::initialize()
   }*/
 
   //GPS
-  NVIC_SetPriority(UART3_IRQn, 2);
+  NVIC_SetPriority(UART2_IRQn, 2);
 
   transmitter_.transmit("Initialized");
 
@@ -101,6 +120,8 @@ void Avionics::getDatas()
   datas.gyro = Vec3(lsm_.gx, lsm_.gy, lsm_.gz);
   datas.magn = Vec3(lsm_.mx, lsm_.my, lsm_.mz);
 
+  datas.largeAcc = adxl_.getOutput();
+
   datas.altitude =
       Utils::calcAltitude(basePressure, datas.pressure, datas.temperature);
 
@@ -116,13 +137,13 @@ void Avionics::getDatas()
     datas.latitude = gps_.latitude;
   }
 
-  transmit(std::to_string((int)datas.longitude) + ", " + std::to_string((int)datas.longitude));
+  //transmit(std::to_string((int)datas.longitude) + ", " + std::to_string((int)datas.longitude));
 }
 
 void Avionics::writeDatas()
 {
-  transmitter_.transmit("(" + to_XString(datas.roll) + ", " + to_XString(datas.pitch) + ", " + to_XString(datas.yaw) + ")");
-  transmitter_.transmit(to_XString(datas.pressure) + ", " + to_XString(datas.temperature));
+  //transmitter_.transmit("(" + to_XString(datas.roll) + ", " + to_XString(datas.pitch) + ", " + to_XString(datas.yaw) + ")");
+  //transmitter_.transmit(to_XString(datas.pressure) + ", " + to_XString(datas.temperature));
 
   //sd.write(getCSVFormattedData());
 }

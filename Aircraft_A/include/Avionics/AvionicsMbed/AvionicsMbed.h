@@ -9,7 +9,11 @@ This program is developed under the mbed-os 6.2.0
 #include "../../Module/mbed_6.2.0/LSMWrapper/LSMWrapper.h"
 #include "../../Module/mbed_6.2.0/TimerWrapper/TimerWrapper.h"
 #include "../../Module/mbed_6.2.0/GPS/GPS.h"
+#include "../../Module/mbed_6.2.0/ADXL345_I2C/ADXL345_I2C.h"
+#include "../../Module/mbed_6.2.0/SDCard/SDCard.h"
+
 #include "mbed.h"
+#include "blockdevice/BlockDevice.h"
 
 class Avionics : public AvionicsBase
 {
@@ -21,8 +25,10 @@ protected:
   IM920Wrapper transmitter_;
   LPSWrapper lps_;
   LSMWrapper lsm_;
+  ADXL345_I2C adxl_;
   GPS gps_;
-  //SDFileSystem sd(p5, p6, p7, p8, "sd");
+  SDCard sd_;
+  //SDFileSystem sd_;//(p5, p6, p7, p8, "sd");
   //PwmOut servo_1(p21), servo_2(p22), servo_3(p23);
 
 public:
@@ -32,7 +38,9 @@ public:
         transmitter_("Sender_A", p28, p27, p29, p30),
         lps_("LPS331_A", p9, p10, LPS331_I2C_SA0_HIGH),
         lsm_("LSM9DS1_A", p9, p10),
-        gps_(p13, p14)
+        adxl_(p9, p10),
+        gps_(p13, p14),
+        sd_(p5, p6, p7, p8)
   {
   }
 
