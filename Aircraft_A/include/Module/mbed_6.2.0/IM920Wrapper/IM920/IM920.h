@@ -71,12 +71,12 @@ public:
   int recv(char *buf, int len);
 
   void attach(void (*fptr)() = NULL) {
-    _func = Callback<void()>(fptr);
+    _func = callback(fptr);//Callback<void()>(fptr);
     //_func.attach(fptr);
   }
   template <typename T> void attach(T *tptr, void (T::*mptr)()) {
     if ((mptr != NULL) && (tptr != NULL)) {
-      _func = Callback<void()>(tptr, mptr);
+      _func = callback(tptr, mptr);// Callback<void()>(tptr, mptr);
       // _func.attach(tptr, mptr);
     }
   }

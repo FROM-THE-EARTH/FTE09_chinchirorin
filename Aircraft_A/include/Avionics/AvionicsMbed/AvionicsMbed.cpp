@@ -8,11 +8,11 @@
 
 bool Avionics::initialize()
 {
-  sd_.opening_file("/fs/", "test.txt");
+  /*sd_.opening_file("/fs/", "test.txt");
   FILE *f = sd_.getFile();
   fprintf(f, "aaaaaaaaaaa");
   sd_.closing_file();
-  sd_.unmounting();
+  sd_.unmounting();*/
 
   // IM920
   transmitter_.initialize();

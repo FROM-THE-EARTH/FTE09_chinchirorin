@@ -51,7 +51,7 @@ void IM920::initUart (PinName busy, PinName reset, int baud) {
     _baud = baud;
     if (_baud) _im.baud(_baud);
     //_im.attach(this, &IM920::isrUart, Serial::RxIrq);
-    _im.attach(_func, UnbufferedSerial::RxIrq);
+    _im.attach(callback(this, &IM920::isrUart), UnbufferedSerial::RxIrq);
 
     _busy = NULL;
     _reset = NULL;
