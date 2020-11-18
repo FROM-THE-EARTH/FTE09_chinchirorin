@@ -75,7 +75,7 @@ private:
 
   virtual xString received() override
   {
-    return transmitter_.received();
+    return receiver_.received();
   };
 
   void onReceive()

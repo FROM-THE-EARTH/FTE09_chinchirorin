@@ -1,18 +1,26 @@
-/*#include "Avionics/Avionics.h"
+#include "Avionics/Avionics.h"
 
 Avionics avionics;
 
 DigitalOut igniter(p19, 1);
-PwmOut servo_1(p21), servo_2(p23);//p21, p23
+PwmOut servo_1(p21), servo_2(p22);
+//ラズパイカメラ　p15 high -< low(カメラスタート) -> high(ストップ)
 
 void defineFunctions();
 
+#include "IM920SoftSerial.h"
+IM920SoftSerial im920(p15, p16);
+
 int main()
 {
-  
-  printf("Hello Mbed\r\n");
-
-  defineFunctions();
+    while(1){
+        im920.update();
+        auto r = im920.received();
+        if(r != ""){
+            //printf("%s\r\n", r.c_str());
+        }
+    }
+  /*defineFunctions();
 
   avionics.setDebugMode(true);
 
@@ -21,9 +29,9 @@ int main()
     return 0;
   }
 
-  avionics.begin();
+  avionics.begin();*/
 }
-
+/*
 void defineFunctions()
 {
   avionics.Condition_Launch = []() {
@@ -47,16 +55,18 @@ void defineFunctions()
   };
 
   avionics.Operation_OpenParachute = [](){
-    //servo
+    servo_1.pulsewidth(1.50/1000.0);//1 open
+    servo_2.pulsewidth(1.60/1000.0);//2 open
   };
 
   avionics.Operation_CloseServo = [](){
-    servo_1.pulsewidth(2.20/1000.0);//ms/1000 0.80
-    servo_2.pulsewidth(2.20/1000.0);//ms/1000 0.80
+    servo_1.pulsewidth(0.90/1000.0);//1 close
+    servo_2.pulsewidth(0.90/1000.0);//2 close
   };
-}*/
+}
+*/
 
-#include "mbed.h"
+/*#include "mbed.h"
 
 #include "BufferedSoftSerial.h"
 
@@ -84,4 +94,4 @@ int main(){
 
     wait_us(500000);
   }
-}
+}*/

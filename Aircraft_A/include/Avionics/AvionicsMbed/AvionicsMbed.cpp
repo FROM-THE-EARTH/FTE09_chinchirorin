@@ -30,13 +30,10 @@ bool Avionics::initialize()
   // IM920
   transmitter_.initialize();
   transmitter_.transmit("Initializing");
-  transmitter_.attach(this, &Avionics::onReceive);
+  //transmitter_.attach(this, &Avionics::onReceive);
 
   receiver_.initialize();
-  if (receiver_.isAvailable())
-  {
-    receiver_.attach(this, &Avionics::onReceive);
-  }
+  receiver_.attach(this, &Avionics::onReceive);
 
   // LSM9DS1
   lsm_.initialize();
