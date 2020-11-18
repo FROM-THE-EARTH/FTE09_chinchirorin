@@ -110,7 +110,7 @@ protected:
   virtual void transmit(const xString &str) = 0;
 
   // transmit
-  virtual xString receive() = 0;
+  virtual xString received() = 0;
 
   //--------------------------------------
   // Defines in this class

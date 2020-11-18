@@ -153,7 +153,7 @@ AvionicsBase::Commands AvionicsBase::checkCommand(const xString &recv)
 
 void AvionicsBase::onReceiveCommand()
 {
-  switch (checkCommand(receive()))
+  switch (checkCommand(received()))
   {
   case Commands::Reboot:
     reboot();

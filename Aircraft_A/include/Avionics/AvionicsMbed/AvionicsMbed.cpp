@@ -8,15 +8,29 @@
 
 bool Avionics::initialize()
 {
-  /*sd_.opening_file("/fs/", "test.txt");
-  FILE *f = sd_.getFile();
+  /*SDCard *sd_ = new SDCard(p5, p6, p7, p8);
+  if(sd_->mounting() == 1){
+    printf("mounted\r\n");
+  }else{
+    printf("mount failed\r\n");
+  }
+
+  sd_->opening_file("/", "test.txt");
+  FILE *f = sd_->getFile();
+  if(f == nullptr){
+    printf("nullptr\r\n");
+    return false;
+  }else{
+    printf("not nullptr\r\n");
+  }
   fprintf(f, "aaaaaaaaaaa");
-  sd_.closing_file();
-  sd_.unmounting();*/
+  sd_->closing_file();
+  sd_->unmounting();*/
 
   // IM920
   transmitter_.initialize();
   transmitter_.transmit("Initializing");
+  transmitter_.attach(this, &Avionics::onReceive);
 
   receiver_.initialize();
   if (receiver_.isAvailable())
@@ -39,22 +53,7 @@ bool Avionics::initialize()
   lps_.setDataRate(LPS331_I2C_DATARATE_25HZ);
 
   // ADXL345
-  /*if (adxl_.setPowerControl(0x00))
-  {
-    pc.printf("didn't intitialize power control\r\n");
-    return 0;
-  }
-  if (adxl_.setDataRate(ADXL345_800HZ))
-  {
-    pc.printf("didn't set data rate\r\n");
-    return 0;
-  }*/
-
-  // SD
-  /*fp = fopen("/sd/data.csv", "w");
-  if(fp != NULL) {
-      fprintf(fp,csvHeader + "\r\n");
-  }*/
+  adxl_.initialize();
 
   //GPS
   NVIC_SetPriority(UART2_IRQn, 2);
@@ -74,6 +73,8 @@ void Avionics::update()
 {
   receiver_.poll();
 
+  transmitter_.poll();
+
   timer_.update();
 
   datas.time = timer_.now();
@@ -89,6 +90,7 @@ bool Avionics::isReady(bool showDetail)
   allModulesAvailable &= receiver_.isAvailable();
   allModulesAvailable &= lps_.isAvailable();
   allModulesAvailable &= lsm_.isAvailable();
+  allModulesAvailable &= adxl_.isAvailable();
 
   if (showDetail)
   {
@@ -96,6 +98,7 @@ bool Avionics::isReady(bool showDetail)
     transmitter_.transmit(receiver_.status());
     transmitter_.transmit(lps_.status());
     transmitter_.transmit(lsm_.status());
+    transmitter_.transmit(adxl_.status());
   }
   transmitter_.transmit("Modules: " + xString(allModulesAvailable ? "OK" : "NG"));
 
@@ -137,6 +140,7 @@ void Avionics::getDatas()
     datas.latitude = gps_.latitude;
   }
 
+  transmit(datas.largeAcc.toString());
   //transmit(std::to_string((int)datas.longitude) + ", " + std::to_string((int)datas.longitude));
 }
 

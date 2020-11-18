@@ -17,13 +17,13 @@ int SDCard::mounting(){
         // this should only happen on the first boot
         printf("No filesystem found... \r\n");
         fflush(stdout);
-        /*
-        err = fileSystem.reformat(&blockDevice);
-        my_pc.printf("%s\r\n", (err ? "Fail :(" : "OK"));
-        if (err) {
-            error("error: %s (%d)\r\n", strerror(-err), err);
+        
+        __err = __fileSystem.reformat(&__blockDevice);
+        printf("%s\r\n", (__err ? "Fail :(" : "OK"));
+        if (__err) {
+            error("error: %s (%d)\r\n", strerror(-__err), __err);
         }
-        */
+        
         return -1;
     }
     return 1;

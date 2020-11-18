@@ -16,7 +16,10 @@ int main()
 
   avionics.setDebugMode(true);
 
-  avionics.initialize();
+  if(!avionics.initialize()){
+    printf("ERROR\r\n");
+    return 0;
+  }
 
   avionics.begin();
 }
@@ -51,52 +54,34 @@ void defineFunctions()
     servo_1.pulsewidth(2.20/1000.0);//ms/1000 0.80
     servo_2.pulsewidth(2.20/1000.0);//ms/1000 0.80
   };
-}
-*/
-
+}*/
 
 #include "mbed.h"
-#include "IM920.h"
- 
-DigitalOut myled(LED1);
-BufferedSerial pc(USBTX, USBRX);
-IM920 im920(p28, p27, p29, p30);
- 
-void callback () {
-    int i;
-    char buf[65];
- 
-    i = im920.recv(buf, 64);
-    buf[i] = 0;
-    printf("recv: '%s' (%d)\r\n", buf, i);
-}
- 
-int main() {
-    int i = 0;
-    char buf[65];
- 
-    pc.set_baud(9600);
-    pc.write("*** IM920\r\n", 12);
-    im920.init();
-    im920.attach(callback);
-    myled = 1;
- 
-    for (;;) {
-        im920.poll();
-        if (pc.readable()) {
-            char c;
-            pc.read(&c, 1);
-            if (c == '\r') {
-                buf[i] = 0;
-                printf("send: %s\r\n", buf);
-                im920.send(buf, i);
-                i = 0;
-            } else
-            if (i < 64) {
-                buf[i] = c;
-                i ++;
-            }
-        }
+
+#include "BufferedSoftSerial.h"
+
+BufferedSoftSerial ss(p15, p16);
+
+int main(){
+  printf("HELLO WORLD\r\n");
+
+  ss.baud(19200);
+  bool reading = false;
+
+  while(1){
+    if(ss.readable()){
+      printf("%c",static_cast<char>(ss.getc()));
+      reading = true;
     }
+    if(reading && !ss.readable()){
+      printf("\r\n");
+      reading = false;
+    }
+    
+    if(!reading && !ss.readable()){
+      printf("unreadable\r\n");
+    }
+
+    wait_us(500000);
+  }
 }
- 

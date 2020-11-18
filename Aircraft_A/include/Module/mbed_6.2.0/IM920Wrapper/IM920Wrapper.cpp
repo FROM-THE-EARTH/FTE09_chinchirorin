@@ -20,7 +20,7 @@ void IM920Wrapper::transmit(const xString &str) {
   }
 }
 
-xString IM920Wrapper::receive() {
+xString IM920Wrapper::received() {
   char buf[257];
 
   const int i = IM920::recv(buf, 256);
