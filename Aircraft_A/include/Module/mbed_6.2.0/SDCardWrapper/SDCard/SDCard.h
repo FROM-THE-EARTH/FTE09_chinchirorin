@@ -45,7 +45,7 @@ public:
     * @param file   name of the file with extension
     * @return error 1 if OK, -1 if not OK
     */
-    int opening_file(char *path, char* filename);
+    int opening_file(char *path, const char* filename, const char* mode);
     /**
     *   Closing file on SD Card
     *

@@ -8,29 +8,9 @@
 
 bool Avionics::initialize()
 {
-  /*SDCard *sd_ = new SDCard(p5, p6, p7, p8);
-  if(sd_->mounting() == 1){
-    printf("mounted\r\n");
-  }else{
-    printf("mount failed\r\n");
-  }
-
-  sd_->opening_file("/", "test.txt");
-  FILE *f = sd_->getFile();
-  if(f == nullptr){
-    printf("nullptr\r\n");
-    return false;
-  }else{
-    printf("not nullptr\r\n");
-  }
-  fprintf(f, "aaaaaaaaaaa");
-  sd_->closing_file();
-  sd_->unmounting();*/
-
   // IM920
   transmitter_.initialize();
   transmitter_.transmit("Initializing");
-  //transmitter_.attach(this, &Avionics::onReceive);
 
   receiver_.initialize();
   receiver_.attach(this, &Avionics::onReceive);
@@ -55,6 +35,12 @@ bool Avionics::initialize()
   //GPS
   NVIC_SetPriority(UART2_IRQn, 2);
 
+  //SD
+  sd_.initialize();
+  sd_.open("data.csv");
+  sd_.write(csvHeader + "\n");
+
+  //end initialization
   transmitter_.transmit("Initialized");
 
   //initialize datas
@@ -68,9 +54,7 @@ bool Avionics::initialize()
 
 void Avionics::update()
 {
-  receiver_.poll();
-
-  transmitter_.poll();
+  receiver_.update();
 
   timer_.update();
 
@@ -88,6 +72,7 @@ bool Avionics::isReady(bool showDetail)
   allModulesAvailable &= lps_.isAvailable();
   allModulesAvailable &= lsm_.isAvailable();
   allModulesAvailable &= adxl_.isAvailable();
+  allModulesAvailable &= sd_.isAvailable();
 
   if (showDetail)
   {
@@ -96,7 +81,9 @@ bool Avionics::isReady(bool showDetail)
     transmitter_.transmit(lps_.status());
     transmitter_.transmit(lsm_.status());
     transmitter_.transmit(adxl_.status());
+    transmitter_.transmit(sd_.status());
   }
+
   transmitter_.transmit("Modules: " + xString(allModulesAvailable ? "OK" : "NG"));
 
   return allModulesAvailable;
@@ -116,9 +103,9 @@ void Avionics::getDatas()
   datas.pressure = lps_.getPressure();
   datas.temperature = lps_.getTemperature();
 
-  datas.accel = Vec3(lsm_.ax, lsm_.ay, lsm_.az);
-  datas.gyro = Vec3(lsm_.gx, lsm_.gy, lsm_.gz);
-  datas.magn = Vec3(lsm_.mx, lsm_.my, lsm_.mz);
+  datas.accel = {lsm_.ax, lsm_.ay, lsm_.az};
+  datas.gyro = {lsm_.gx, lsm_.gy, lsm_.gz};
+  datas.magn = {lsm_.mx, lsm_.my, lsm_.mz};
 
   datas.largeAcc = adxl_.getOutput();
 
@@ -130,23 +117,17 @@ void Avionics::getDatas()
     datas.maxAltitude = datas.altitude;
   }
 
+  gps_.getgps();
   if (gps_.result)
   {
-    gps_.getgps();
     datas.longitude = gps_.longitude;
     datas.latitude = gps_.latitude;
   }
-
-  transmit(datas.largeAcc.toString());
-  //transmit(std::to_string((int)datas.longitude) + ", " + std::to_string((int)datas.longitude));
 }
 
 void Avionics::writeDatas()
 {
-  //transmitter_.transmit("(" + to_XString(datas.roll) + ", " + to_XString(datas.pitch) + ", " + to_XString(datas.yaw) + ")");
-  //transmitter_.transmit(to_XString(datas.pressure) + ", " + to_XString(datas.temperature));
-
-  //sd.write(getCSVFormattedData());
+  sd_.write(getCSVFormattedData() + "\n");
 }
 
 #endif

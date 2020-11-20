@@ -4,7 +4,7 @@ void IM920Wrapper::transmit(const xString &str) {
   const xString s = name() + "->" + str;
 
   if (sendToSerial_) {
-    printf("[Debug]");
+    printf("[Debug Transmit]");
     printf("%s", s.c_str());
     printf("\r\n");
   }
@@ -29,7 +29,7 @@ xString IM920Wrapper::received() {
   const xString str = buf;
 
   if (sendToSerial_) {
-    printf("[Debug]");
+    printf("[Debug Received]");
     printf("%s", str.c_str());
     printf("\r\n");
   }

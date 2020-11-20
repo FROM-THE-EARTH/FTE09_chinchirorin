@@ -46,12 +46,12 @@ class AvionicsBase
   bool recording_ = false;
   bool detached_ = false, decelerationStarted_ = false;
 
-  Sequence sequence_ = Sequence::ReadyToLaunch;
+  Sequence sequence_ = Sequence::Waiting;
 
 protected:
   Datas datas;
 
-  const xString csvHeader = "time,temperature,pressure,accX,accY,accZ,gyroX,gyroY,gyroZ,magnX,magnY,magnZ,longitude,latitude";
+  const xString csvHeader = "time,temperature,pressure,accX,accY,accZ,gyroX,gyroY,gyroZ,magnX,magnY,magnZ,largeAccX,largeAccY,largeAccZ,longitude,latitude,roll,pitch,yaw";
 
 public:
   // main loop
@@ -76,6 +76,8 @@ public:
   void (*Operation_Detach)() = Function::Operation::None;
   void (*Operation_OpenParachute)();
   void (*Operation_CloseServo)();
+  void (*Operation_CameraOn)() = Function::Operation::None;
+  void (*Operation_CameraOff)() = Function::Operation::None;
 
 protected:
   AvionicsBase(bool hasGPS, bool imuFilter, bool useMagnInMadgwick)
@@ -106,6 +108,9 @@ protected:
   // write datas
   virtual void writeDatas() = 0;
 
+  // close sdcard when landing
+  virtual void closeSDCard() = 0;
+
   // transmit
   virtual void transmit(const xString &str) = 0;
 
@@ -126,14 +131,17 @@ protected:
 
   xString getCSVFormattedData() const
   {
-    //const xString csvHeader = "time,temperature,pressure,accX,accY,accZ,gyroX,gyroY,gyroZ,magnX,magnY,magnZ,longitude,latitude";
+    //csvHeader = 
+    //time,temperature,pressure,accX,accY,accZ,gyroX,gyroY,gyroZ,magnX,magnY,magnZ,largeAccX,largeAccY,largeAccZ,longitude,latitude,roll,pitch,yaw
 
     return (
-        to_XString(datas.time) + to_XString(datas.temperature) + to_XString(datas.pressure)
-        + to_XString(datas.accel.x) + to_XString(datas.accel.y) + to_XString(datas.accel.z)
-        + to_XString(datas.gyro.x) + to_XString(datas.gyro.y) + to_XString(datas.gyro.z)
-        + to_XString(datas.magn.x) + to_XString(datas.magn.y) + to_XString(datas.magn.z)
-        + to_XString(datas.longitude) + to_XString(datas.latitude)
+        to_XString(datas.time) + "," + to_XString(datas.temperature) + "," + to_XString(datas.pressure) + ","
+        + to_XString(datas.accel.x) + "," + to_XString(datas.accel.y) + "," + to_XString(datas.accel.z) + ","
+        + to_XString(datas.gyro.x) + "," + to_XString(datas.gyro.y) + "," + to_XString(datas.gyro.z) + ","
+        + to_XString(datas.magn.x) + "," + to_XString(datas.magn.y) + "," + to_XString(datas.magn.z) + ","
+        + to_XString(datas.largeAcc.x) + "," + to_XString(datas.largeAcc.y) + "," + to_XString(datas.largeAcc.z) + ","
+        + to_XString(datas.longitude) + "," + to_XString(datas.latitude) + ","
+        + to_XString(datas.roll) + "," + to_XString(datas.pitch) + "," + to_XString(datas.yaw)
         );
   }
 

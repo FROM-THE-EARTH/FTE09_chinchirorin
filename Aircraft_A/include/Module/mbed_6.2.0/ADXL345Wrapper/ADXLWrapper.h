@@ -20,11 +20,11 @@ public:
     //Go into standby mode to configure the device.
     setPowerControl(0x00);
  
-    //Full resolution, +/-16g, 4mg/LSB.
+    //resolution
     setDataFormatControl(0x0B);
     
-    //3.2kHz data rate.
-    setDataRate(ADXL345_3200HZ);
+    //data rate.
+    setDataRate(ADXL345_1600HZ);
  
     //Measurement mode.
     setPowerControl(0x08);
