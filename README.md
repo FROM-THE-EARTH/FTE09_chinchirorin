@@ -1,9 +1,5 @@
 # FTE09_chinchirorin
  FTE09ちんちろりんのメイン電装のソースコードです
- 
- Aircraft_Aは上段電装
- 
- Aircraft_Bは下段電装
 
 製作ついでにフレームワーク？としてまとめました。[**別リポジトリ**](https://github.com/FROM-THE-EARTH/Avionics-Software)で公開済み。
 
