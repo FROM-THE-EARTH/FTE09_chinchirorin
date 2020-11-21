@@ -74,10 +74,20 @@ public:
   bool (*Condition_Landing)();
 
   // operations. called once
+  
+  // called when condition is true
   void (*Operation_Detach)() = Function::Operation::None;
+
+  // called when condition is true
   void (*Operation_OpenParachute)();
+
+  // called when command "svclose" received
   void (*Operation_CloseServo)();
+
+  // called when command "escape" received
   void (*Operation_CameraOn)() = Function::Operation::None;
+
+  // called when landing
   void (*Operation_CameraOff)() = Function::Operation::None;
 
 protected:
