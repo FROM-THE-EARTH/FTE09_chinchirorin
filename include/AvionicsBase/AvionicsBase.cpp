@@ -65,7 +65,7 @@ void AvionicsBase::waiting()
 {
   if (isElapsed(3.0f))
   {
-    transmit("Waiting");
+    transmit("Waiting " + to_XString(datas.time) + "s");
   }
 }
 

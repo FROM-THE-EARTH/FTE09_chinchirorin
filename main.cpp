@@ -15,7 +15,7 @@ int main()
 
   defineFunctions();
 
-  avionics.setDebugMode(true);
+  avionics.setDebugMode(false);
 
   avionics.initialize();
 

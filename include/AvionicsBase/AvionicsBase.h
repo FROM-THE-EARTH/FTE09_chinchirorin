@@ -52,6 +52,8 @@ class AvionicsBase
 protected:
   Datas datas;
 
+  float basePressure = 1020.2f;
+
   const xString csvHeader = "time,temperature,pressure,accX,accY,accZ,gyroX,gyroY,gyroZ,magnX,magnY,magnZ,largeAccX,largeAccY,largeAccZ,longitude,latitude,roll,pitch,yaw";
 
 public:

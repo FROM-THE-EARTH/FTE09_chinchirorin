@@ -4,7 +4,6 @@
 #ifdef PLATFORM_MBED
 
 #include "Utils.h"
-#include "Nature.h"
 
 bool Avionics::initialize()
 {
